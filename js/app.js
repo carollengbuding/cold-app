@@ -1214,7 +1214,12 @@ const Download = {
 
 // Service Worker 注册（PWA）
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
-  });
+  const registerSW = () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('[SW] 注册成功', reg.scope))
+      .catch(err => console.error('[SW] 注册失败:', err));
+  };
+  // 立即注册（若 load 已触发则直接注册，否则等 load）
+  if (document.readyState === 'complete') registerSW();
+  else window.addEventListener('load', registerSW, { once: true });
 }

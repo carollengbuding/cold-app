@@ -1,7 +1,8 @@
 {
   "name": "冷不丁就厉害了",
-  "short_name": "冷不丁就厉害了",
+  "short_name": "冷不丁",
   "description": "个人提升平台 - 每天进步一点点",
+  "lang": "zh-CN",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -10,22 +11,22 @@
   "theme_color": "#7BA8A1",
   "icons": [
     {
-      "src": "https://carollengbuding.github.io/cold-app/assets/app-icon-180.png",
-      "sizes": "180x180",
+      "src": "assets/app-icon-192.png",
+      "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "https://carollengbuding.github.io/cold-app/assets/app-icon.png",
+      "src": "assets/app-icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "https://carollengbuding.github.io/cold-app/assets/app-icon-192.png",
-      "sizes": "192x192",
+      "src": "assets/app-icon-maskable.png",
+      "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "maskable"
     }
   ]
 }
