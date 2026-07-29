@@ -1,5 +1,5 @@
 // Service Worker for 冷不丁就厉害了
-const CACHE = 'cold-app-v15';
+const CACHE = 'cold-app-v16';
 const ASSETS = [
   './',
   './index.html',
@@ -43,6 +43,10 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
+  // 图标与 manifest：直接走网络，绝不经过 SW 缓存，避免安装时图标被污染成截图
+  if (url.pathname.includes('app-icon') || url.pathname.endsWith('/manifest.json')) {
+    return;
+  }
   // 导航请求：优先网络，离线才回退 index.html
   if (e.request.mode === 'navigate') {
     e.respondWith(fetch(e.request).catch(() => caches.match('./index.html')));

@@ -26,12 +26,6 @@
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
-    },
-    {
-      "src": "https://carollengbuding.github.io/cold-app/assets/app-icon-maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
     }
   ]
 }
