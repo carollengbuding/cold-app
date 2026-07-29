@@ -1,5 +1,5 @@
 // Service Worker for 冷不丁就厉害了
-const CACHE = 'cold-app-v11';
+const CACHE = 'cold-app-v12';
 const ASSETS = [
   './',
   './index.html',
@@ -9,6 +9,7 @@ const ASSETS = [
   './manifest.json',
   './assets/app-icon.jpg',
   './assets/app-icon.png',
+  './assets/app-icon-180.png',
   './assets/app-icon-192.png',
   './assets/app-icon-maskable.png',
   './assets/reward.jpg',
@@ -41,6 +42,12 @@ self.addEventListener('activate', (e) => {
 
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
+  // 仅导航请求在离线时回退到 index.html；图片/资源请求绝不返回 HTML，
+  // 否则 iOS 取 apple-touch-icon 时会拿到 HTML 而被拒（表现为桌面图标变截图）
+  if (e.request.mode === 'navigate') {
+    e.respondWith(fetch(e.request).catch(() => caches.match('./index.html')));
+    return;
+  }
   e.respondWith(
     caches.match(e.request).then(r => r || fetch(e.request).then(resp => {
       if (resp.ok) {
@@ -48,6 +55,6 @@ self.addEventListener('fetch', (e) => {
         caches.open(CACHE).then(c => c.put(e.request, clone));
       }
       return resp;
-    }).catch(() => caches.match('./index.html')))
+    }))
   );
 });
