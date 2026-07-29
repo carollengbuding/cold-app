@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#7BA8A1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="冷不丁就厉害了">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="冷不丁就厉害了">
+  <link rel="icon" type="image/png" href="assets/app-icon.png">
+  <link rel="apple-touch-icon" href="assets/app-icon.png">
+  <link rel="apple-touch-startup-image" href="assets/app-icon.png">
+  <link rel="manifest" href="manifest.json">
+  <title>冷不丁就厉害了</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- 启动页 -->
+  <div id="splash" class="splash">
+    <img src="assets/app-icon.jpg" alt="logo" class="splash-logo">
+    <h1 class="splash-title">冷不丁就厉害了</h1>
+    <p class="splash-slogan">每天进步一点点</p>
+  </div>
+
+  <!-- 主应用容器 -->
+  <div id="app" class="app hidden">
+    <!-- 顶部状态栏 -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button id="menuBtn" class="icon-btn" aria-label="菜单">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+        <div class="topbar-title">
+          <span class="greet" id="greetText">早上好</span>
+          <span class="date" id="dateText"></span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button id="rewardBtn" class="icon-btn" aria-label="奖励" title="每日奖励">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.39 6.95H22l-6.19 4.5L18.18 21 12 16.5 5.82 21l2.37-7.55L2 8.95h7.61z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- 侧边导航栏 -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <img src="assets/app-icon.jpg" alt="logo" class="sidebar-logo">
+        <h2>冷不丁就厉害了</h2>
+        <p class="sidebar-tagline">每天进步一点点</p>
+      </div>
+      <nav class="sidebar-nav">
+        <a class="nav-item active" data-page="home"><span class="nav-ico">🏠</span>首页</a>
+        <a class="nav-item" data-page="exercise"><span class="nav-ico">🏃</span>运动1小时</a>
+        <a class="nav-item" data-page="study"><span class="nav-ico">📚</span>学习1小时</a>
+        <a class="nav-item" data-page="skill"><span class="nav-ico">🎯</span>新技能1小时</a>
+        <a class="nav-item" data-page="news"><span class="nav-ico">📰</span>每日要闻</a>
+        <a class="nav-item" data-page="diet"><span class="nav-ico">🥗</span>健康饮食</a>
+        <a class="nav-item" data-page="morning"><span class="nav-ico">🌅</span>晨间流程</a>
+        <a class="nav-item" data-page="review"><span class="nav-ico">🌙</span>睡前复盘</a>
+        <a class="nav-item" data-page="stats"><span class="nav-ico">📊</span>成就统计</a>
+        <a class="nav-item" id="navInstall"><span class="nav-ico">📲</span>添加到主屏幕</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="streak-badge">
+          <div class="streak-num" id="streakNum">0</div>
+          <div class="streak-text">连续打卡</div>
+        </div>
+        <button id="downloadBtn" class="download-btn">⬇ 下载应用 (ZIP)</button>
+      </div>
+    </aside>
+    <div id="mask" class="mask"></div>
+
+    <!-- 主内容区 -->
+    <main class="main">
+      <!-- ============ 首页 ============ -->
+      <section class="page active" data-page="home">
+        <div class="hero-card">
+          <div class="hero-date">
+            <div class="hero-day" id="heroDay">--</div>
+            <div class="hero-ym" id="heroYM">----</div>
+          </div>
+          <div class="hero-greet">
+            <h2 id="heroGreet">你好</h2>
+            <p id="heroQuote">今天，又是全新的一天</p>
+          </div>
+          <div class="hero-icon">
+            <img src="assets/app-icon.jpg" alt="">
+          </div>
+        </div>
+
+        <!-- 今日任务总览 -->
+        <div class="section">
+          <div class="section-head">
+            <h3>今日任务</h3>
+            <span class="section-tip" id="todayTip">截止 22:00</span>
+          </div>
+          <div class="task-grid" id="taskGrid">
+            <!-- JS 动态生成 -->
+          </div>
+        </div>
+
+        <!-- 添加到桌面引导 -->
+        <div class="install-card" id="installCard">
+          <div class="install-ico">📲</div>
+          <div class="install-text">
+            <div class="install-title">添加到主屏幕</div>
+            <div class="install-sub">把「冷不丁就厉害了」放到桌面，点图标就能打开</div>
+          </div>
+          <button class="install-btn" id="installBtn">添加</button>
+          <button class="install-close" id="installClose" aria-label="关闭">×</button>
+        </div>
+
+        <!-- 快速记录 -->
+        <div class="section">
+          <div class="section-head">
+            <h3>快速记录</h3>
+          </div>
+          <div class="quick-grid">
+            <button class="quick-btn" data-page="exercise">🏃 运动打卡</button>
+            <button class="quick-btn" data-page="study">📖 学习打卡</button>
+            <button class="quick-btn" data-page="skill">✨ 新技能</button>
+            <button class="quick-btn" data-page="diet">🍱 饮食记录</button>
+            <button class="quick-btn" data-page="morning">🌅 晨间打卡</button>
+            <button class="quick-btn" data-page="review">🌙 晚间复盘</button>
+          </div>
+        </div>
+
+        <!-- 重要新闻 -->
+        <div class="section">
+          <div class="section-head">
+            <h3>今日要闻</h3>
+            <a class="section-link" data-page="news">更多 →</a>
+          </div>
+          <div class="news-list" id="homeNewsList"></div>
+        </div>
+      </section>
+
+      <!-- ============ 运动1小时 ============ -->
+      <section class="page" data-page="exercise">
+        <div class="page-title">
+          <h2>🏃 运动1小时</h2>
+          <p>每天运动一小时，健康生活一辈子</p>
+        </div>
+
+        <div class="task-card" data-task-key="exercise">
+          <div class="task-row">
+            <div class="task-info">
+              <div class="task-name">今日运动</div>
+              <div class="task-meta" id="exerciseMeta">未开始</div>
+            </div>
+            <label class="check">
+              <input type="checkbox" data-task="exercise">
+              <span class="check-box"></span>
+            </label>
+          </div>
+          <div class="form-group">
+            <label>运动项目</label>
+            <input type="text" id="exerciseType" placeholder="如：跑步、瑜伽、跳绳...">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>开始时间</label>
+              <input type="time" id="exerciseStart">
+            </div>
+            <div class="form-group">
+              <label>结束时间</label>
+              <input type="time" id="exerciseEnd">
+            </div>
+            <div class="form-group">
+              <label>时长(分钟)</label>
+              <input type="number" id="exerciseMin" placeholder="60">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>运动感受 / 备注</label>
+            <textarea id="exerciseNote" rows="2" placeholder="记录今天的运动感受..."></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <h3>🏋️ 抗阻运动推荐（每日打卡）</h3>
+          </div>
+          <div class="exercise-list" id="exerciseList"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <h3>📅 本周运动记录</h3>
+          </div>
+          <div class="week-strip" id="exerciseWeek"></div>
+        </div>
+      </section>
+
+      <!-- ============ 学习1小时 ============ -->
+      <section class="page" data-page="study">
+        <div class="page-title">
+          <h2>📚 学习1小时</h2>
+          <p>每天学习一小时，遇见更好的自己</p>
+        </div>
+
+        <div class="task-card" data-task-key="study">
+          <div class="task-row">
+            <div class="task-info">
+              <div class="task-name">今日学习</div>
+              <div class="task-meta" id="studyMeta">未开始</div>
+            </div>
+            <label class="check">
+              <input type="checkbox" data-task="study">
+              <span class="check-box"></span>
+            </label>
+          </div>
+          <div class="form-group">
+            <label>学习项目</label>
+            <input type="text" id="studyType" placeholder="如：阅读《xxx》、听课、写作...">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>开始时间</label>
+              <input type="time" id="studyStart">
+            </div>
+            <div class="form-group">
+              <label>结束时间</label>
+              <input type="time" id="studyEnd">
+            </div>
+            <div class="form-group">
+              <label>时长(分钟)</label>
+              <input type="number" id="studyMin" placeholder="60">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>学习成果 / 收获</label>
+            <textarea id="studyNote" rows="3" placeholder="今天学到了什么？有什么收获？"></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <h3>📖 学习推荐</h3>
+          </div>
+          <div class="recommend-list" id="studyRecommend"></div>
+        </div>
+      </section>
+
+      <!-- ============ 新技能1小时 ============ -->
+      <section class="page" data-page="skill">
+        <div class="page-title">
+          <h2>🎯 学习新技能1小时</h2>
+          <p>每天解锁一个新技能，100天成为专家</p>
+        </div>
+
+        <div class="task-card" data-task-key="skill">
+          <div class="task-row">
+            <div class="task-info">
+              <div class="task-name">今日新技能</div>
+              <div class="task-meta" id="skillMeta">未开始</div>
+            </div>
+            <label class="check">
+              <input type="checkbox" data-task="skill">
+              <span class="check-box"></span>
+            </label>
+          </div>
+          <div class="form-group">
+            <label>技能项目</label>
+            <input type="text" id="skillType" placeholder="如：PS、Python、吉他、烘焙...">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>开始时间</label>
+              <input type="time" id="skillStart">
+            </div>
+            <div class="form-group">
+              <label>结束时间</label>
+              <input type="time" id="skillEnd">
+            </div>
+            <div class="form-group">
+              <label>时长(分钟)</label>
+              <input type="number" id="skillMin" placeholder="60">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>学习成果 / 展示</label>
+            <textarea id="skillNote" rows="3" placeholder="今天掌握了什么？"></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <h3>✨ 100天技能挑战</h3>
+          </div>
+          <div class="skill-grid" id="skillGrid"></div>
+        </div>
+      </section>
+
+      <!-- ============ 每日英语 ============ -->
+      <!-- ============ 每日韩语 ============ -->
+      <!-- ============ 每日日语 ============ -->
+
+      <!-- ============ 每日要闻 ============ -->
+      <section class="page" data-page="news">
+        <div class="page-title">
+          <h2>📰 每日要闻</h2>
+          <p id="newsDate">国际 · 国内 · 每日速览</p>
+        </div>
+
+        <div class="news-tabs">
+          <button class="news-tab active" data-news-cat="world">🌍 国际</button>
+          <button class="news-tab" data-news-cat="china">🇨🇳 国内</button>
+          <button class="news-tab" data-news-cat="tech">💻 科技</button>
+          <button class="news-tab" data-news-cat="finance">💰 财经</button>
+        </div>
+
+        <div class="news-content" id="newsContent"></div>
+
+        <div class="lang-tip">
+          💡 <strong>温馨提示：</strong>今日要闻每日自动更新。
+        </div>
+      </section>
+
+      <!-- ============ 健康饮食 ============ -->
+      <section class="page" data-page="diet">
+        <div class="page-title">
+          <h2>🥗 健康饮食</h2>
+          <p>记录每一餐，拥抱健康生活</p>
+        </div>
+
+        <div class="meal-tabs">
+          <button class="meal-tab active" data-meal="breakfast">🌅 早餐</button>
+          <button class="meal-tab" data-meal="lunch">☀️ 午餐</button>
+          <button class="meal-tab" data-meal="dinner">🌙 晚餐</button>
+          <button class="meal-tab" data-meal="snack">🍎 加餐</button>
+        </div>
+
+        <div class="meal-card">
+          <div class="form-group">
+            <label>食物内容</label>
+            <input type="text" id="mealContent" placeholder="如：燕麦粥、水煮蛋、牛奶">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>热量估算(kcal)</label>
+              <input type="number" id="mealKcal" placeholder="350">
+            </div>
+            <div class="form-group">
+              <label>饮水量(ml)</label>
+              <input type="number" id="mealWater" placeholder="200">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>备注</label>
+            <textarea id="mealNote" rows="2" placeholder="今天饮食的感受..."></textarea>
+          </div>
+          <button class="primary-btn" id="saveMealBtn">保存这一餐</button>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <h3>📋 今日饮食记录</h3>
+          </div>
+          <div class="meal-list" id="mealList"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <h3>📊 今日营养</h3>
+          </div>
+          <div class="nutri-stats" id="nutriStats">
+            <div class="nutri-item">
+              <div class="nutri-num" id="totalKcal">0</div>
+              <div class="nutri-label">总热量(kcal)</div>
+            </div>
+            <div class="nutri-item">
+              <div class="nutri-num" id="totalWater">0</div>
+              <div class="nutri-label">饮水量(ml)</div>
+            </div>
+            <div class="nutri-item">
+              <div class="nutri-num" id="totalMeal">0</div>
+              <div class="nutri-label">进餐次数</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 晨间流程 ============ -->
+      <section class="page" data-page="morning">
+        <div class="page-title">
+          <h2>🌅 晨间流程</h2>
+          <p>7:20 起床 · 美好一天从清晨开始</p>
+        </div>
+
+        <div class="task-card">
+          <div class="task-row">
+            <div class="task-info">
+              <div class="task-name">⏰ 7:20 起床</div>
+              <div class="task-meta" id="morningMeta">待完成</div>
+            </div>
+            <label class="check">
+              <input type="checkbox" data-task="morning">
+              <span class="check-box"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="task-card">
+          <div class="task-row">
+            <div class="task-info">
+              <div class="task-name">🧘 八段锦（2 遍）</div>
+              <div class="task-meta" id="baduanjinMeta">待完成</div>
+            </div>
+            <label class="check">
+              <input type="checkbox" data-task="baduanjin">
+              <span class="check-box"></span>
+            </label>
+          </div>
+          <div class="form-group">
+            <label>八段锦要点 / 感受</label>
+            <textarea id="baduanjinNote" rows="2" placeholder="今天八段锦打完的感受..."></textarea>
+          </div>
+        </div>
+
+        <div class="task-card">
+          <div class="task-row">
+            <div class="task-info">
+              <div class="task-name">📋 安排当天行程</div>
+              <div class="task-meta" id="planMeta">待完成</div>
+            </div>
+            <label class="check">
+              <input type="checkbox" data-task="plan">
+              <span class="check-box"></span>
+            </label>
+          </div>
+          <div class="form-group">
+            <label>今日计划清单</label>
+            <textarea id="planNote" rows="5" placeholder="今日必做：&#10;1. ...&#10;2. ...&#10;3. ..."></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <h3>🌟 晨间打卡建议</h3>
+          </div>
+          <div class="lang-tip">
+            <strong>7:20</strong> 起床 → <strong>7:30-7:50</strong> 八段锦 2 遍 → <strong>8:00</strong> 早餐 → <strong>8:30</strong> 安排行程
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 睡前复盘 ============ -->
+      <section class="page" data-page="review">
+        <div class="page-title">
+          <h2>🌙 睡前复盘</h2>
+          <p>10:30 入睡 · 反思让明天更好</p>
+        </div>
+
+        <div class="task-card">
+          <div class="task-row">
+            <div class="task-info">
+              <div class="task-name">💤 10:30 入睡</div>
+              <div class="task-meta" id="sleepMeta">待完成</div>
+            </div>
+            <label class="check">
+              <input type="checkbox" data-task="sleep">
+              <span class="check-box"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="task-card">
+          <div class="task-row">
+            <div class="task-info">
+              <div class="task-name">🌙 睡前复盘</div>
+              <div class="task-meta" id="reviewMeta">待完成</div>
+            </div>
+            <label class="check">
+              <input type="checkbox" data-task="review">
+              <span class="check-box"></span>
+            </label>
+          </div>
+          <div class="form-group">
+            <label>今天做对了什么？</label>
+            <textarea id="reviewWin" rows="3" placeholder="今天最值得骄傲的事..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>今天有哪些不足？</label>
+            <textarea id="reviewBad" rows="3" placeholder="今天可以改进的地方..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>明天最重要的事</label>
+            <textarea id="reviewTomorrow" rows="3" placeholder="明天最重要的 1-3 件事..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>今日心情打分（1-10）</label>
+            <input type="number" id="reviewScore" min="1" max="10" placeholder="8">
+          </div>
+        </div>
+
+        <div class="lang-tip">
+          💡 <strong>复盘的力量：</strong>坚持每天复盘的人，成长速度是普通人的 10 倍。
+        </div>
+      </section>
+
+      <!-- ============ 成就统计 ============ -->
+      <section class="page" data-page="stats">
+        <div class="page-title">
+          <h2>📊 成就统计</h2>
+          <p>看见自己的成长</p>
+        </div>
+
+        <div class="stats-cards">
+          <div class="stat-card">
+            <div class="stat-num" id="statStreak">0</div>
+            <div class="stat-label">连续打卡(天)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="statTotal">0</div>
+            <div class="stat-label">总完成(次)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="statToday">0/8</div>
+            <div class="stat-label">今日完成</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="statPenalty">0</div>
+            <div class="stat-label">未完成(次)</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <h3>📅 本周打卡</h3>
+          </div>
+          <div class="week-strip" id="statsWeek"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <h3>⚠️ 翻倍惩罚记录</h3>
+          </div>
+          <div class="penalty-list" id="penaltyList"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <h3>🏆 成就徽章</h3>
+          </div>
+          <div class="badge-list" id="badgeList"></div>
+        </div>
+
+        <button class="danger-btn" id="resetBtn">⚠️ 重置所有数据</button>
+      </section>
+    </main>
+  </div>
+
+  <!-- 任务完成奖励弹窗 -->
+  <div id="rewardModal" class="modal">
+    <div class="modal-box reward-box">
+      <img src="assets/reward.jpg" alt="加油" class="reward-img">
+      <h3 id="rewardTitle">太棒了！</h3>
+      <p id="rewardText">完成了一项任务，继续加油！</p>
+      <button class="primary-btn" id="rewardClose">继续努力</button>
+    </div>
+  </div>
+
+  <!-- 翻倍惩罚弹窗 -->
+  <div id="penaltyModal" class="modal">
+    <div class="modal-box penalty-box">
+      <img src="assets/penalty.jpg" alt="警告" class="penalty-img">
+      <h3>昨天有任务没完成</h3>
+      <p id="penaltyText">昨天有任务未完成，今天要翻倍完成哦！</p>
+      <div class="penalty-list-modal" id="penaltyListModal"></div>
+      <button class="primary-btn" id="penaltyClose">知道了</button>
+    </div>
+  </div>
+
+  <!-- 通用确认弹窗 -->
+  <div id="alertModal" class="modal">
+    <div class="modal-box alert-box">
+      <h3 id="alertTitle">提示</h3>
+      <p id="alertText">内容</p>
+      <button class="primary-btn" id="alertClose">确定</button>
+    </div>
+  </div>
+
+  <!-- 安装引导（iOS/手动） -->
+  <div id="installGuide" class="modal">
+    <div class="modal-box alert-box">
+      <h3>📲 添加到主屏幕</h3>
+      <div class="guide-steps">
+        <p class="guide-os">🍎 iPhone / iPad（Safari）</p>
+        <p>1. 点击底部「分享」按钮 <span class="guide-ico">⬆</span></p>
+        <p>2. 下滑找到「添加到主屏幕」</p>
+        <p>3. 点右上「添加」，桌面即出现「冷不丁就厉害了」图标</p>
+        <p class="guide-os">🤖 安卓（Chrome）</p>
+        <p>点右上「⋯」→「安装应用 / 添加到主屏幕」即可</p>
+        <p class="guide-os">💻 电脑（Chrome / Edge）</p>
+        <p>地址栏右侧点「安装」图标，或菜单 →「安装应用」</p>
+        <p class="guide-note">⚠️ 当前是沙箱预览页，部分环境不会弹出安装提示。若点了没反应，请用手机/电脑的<strong>真实浏览器</strong>打开本页，或用侧边栏「⬇ 下载应用」把包下载到本地、部署到自己的域名（GitHub Pages / Netlify 等）后即可正常安装。</p>
+      </div>
+      <button class="primary-btn" id="installGuideClose">知道了</button>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
