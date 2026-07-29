@@ -1000,7 +1000,7 @@ const Install = {
     window.addEventListener('appinstalled', () => {
       localStorage.setItem('app_installed', '1');
       if (card) card.style.display = 'none';
-      showToast('已添加到主屏幕 🎉');
+      showToast('已安装 🎉 图标在「应用抽屉」，长按可拖到桌面');
     });
 
     $('#installBtn').addEventListener('click', async () => {
