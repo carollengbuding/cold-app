@@ -1,5 +1,5 @@
 // Service Worker for 冷不丁就厉害了
-const CACHE = 'cold-app-v12';
+const CACHE = 'cold-app-v13';
 const ASSETS = [
   './',
   './index.html',
