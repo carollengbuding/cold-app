@@ -994,6 +994,7 @@ const Install = {
       if (card && !localStorage.getItem('app_installed')) {
         card.style.display = 'flex';
       }
+      this.updateStatus();
     });
 
     window.addEventListener('appinstalled', () => {
@@ -1027,6 +1028,33 @@ const Install = {
     const navInstall = $('#navInstall');
     if (navInstall) {
       navInstall.addEventListener('click', () => showModal('installGuide'));
+    }
+
+    // 实时诊断：在卡片上显示 SW 与可安装状态，方便排查
+    this.updateStatus();
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.addEventListener('controllerchange', () => this.updateStatus());
+    }
+    setTimeout(() => this.updateStatus(), 3500); // 等 SW 注册/激活后再看一次
+  },
+  updateStatus() {
+    const el = $('#installStatus');
+    if (!el) return;
+    if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
+      el.textContent = '✅ 已是独立应用（已安装）';
+      el.style.color = '#2e7d5b';
+      return;
+    }
+    const swOk = !!(navigator.serviceWorker && navigator.serviceWorker.controller);
+    if (this.deferredPrompt) {
+      el.textContent = '✅ 可安装：点「添加」或浏览器菜单「安装应用」';
+      el.style.color = '#2e7d5b';
+    } else if (swOk) {
+      el.textContent = '🟡 已就绪：浏览器菜单「⋮ → 安装应用」即可';
+      el.style.color = '#9a7b1f';
+    } else {
+      el.textContent = '⏳ 正在加载服务（若长期如此：清站点数据后刷新）';
+      el.style.color = '#888';
     }
   }
 };

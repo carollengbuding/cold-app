@@ -572,6 +572,7 @@ button {
 .install-text { flex: 1; min-width: 0; }
 .install-title { font-size: 14px; font-weight: 600; color: var(--text-1); }
 .install-sub { font-size: 11px; color: var(--text-3); margin-top: 2px; line-height: 1.4; }
+.install-status { font-size: 10px; margin-top: 4px; line-height: 1.35; font-weight: 600; }
 .install-btn {
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: #fff;
